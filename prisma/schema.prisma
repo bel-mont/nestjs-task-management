@@ -1,0 +1,20 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = "mysql://root:root@localhost:3306/task-management"
+}
+
+model Task {
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  title       String   @db.VarChar(255)
+  description String   @db.VarChar(1000)
+  status      String   @db.VarChar(255)
+}
