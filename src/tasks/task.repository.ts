@@ -1,6 +1,7 @@
 import { Prisma, Task } from '.prisma/client';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/db/services/prisma.service';
+import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { TaskStatus } from './task-status.enum';
 
 @Injectable()
@@ -35,5 +36,29 @@ export class TaskRepository {
         status: taskStatus,
       },
     });
+  }
+
+  async findMany(filter: GetTasksFilterDto): Promise<Task[]> {
+    const { status, search } = filter;
+    const where: Prisma.TaskWhereInput = {};
+    if (status) {
+      where.status = status;
+    }
+    if (search) {
+      where.OR = [
+        {
+          title: {
+            contains: search,
+          },
+        },
+        {
+          description: {
+            contains: search,
+          },
+        },
+      ];
+    }
+    const queryFilter: Prisma.TaskFindManyArgs = { where };
+    return this.prisma.task.findMany(queryFilter);
   }
 }

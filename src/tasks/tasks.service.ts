@@ -35,6 +35,9 @@ export class TasksService {
   // getAllTasks(): Task[] {
   //   return this.tasks;
   // }
+  async getTasks(filterDto: GetTasksFilterDto): Promise<Task[]> {
+    return this.taskRepository.findMany(filterDto);
+  }
 
   async createTask(dto: CreateTaskDto): Promise<Task> {
     const task: Task = await this.taskRepository.create({
